@@ -1,9 +1,9 @@
 #include <chrono>
 #include <cstddef>
-#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
-#include <random>
+#include <fstream>
+#include <sstream>
 #include <string>
 
 /************************************************************************/
@@ -29,6 +29,17 @@ bool Uncompress(const char*, size_t, std::string*);
 }  // namespace snappy_122
 
 /************************************************************************/
+std::string ReadFile(const char* file) {
+  std::ifstream ifs(file);
+  if (ifs) {
+    std::ostringstream oss;
+    oss << ifs.rdbuf();
+    return oss.str();
+  } else {
+    return "";
+  }
+}
+
 template <typename Lambda>
 double Benchmark(Lambda lambda) {
   std::chrono::steady_clock::duration total(0);
@@ -60,65 +71,39 @@ double Benchmark(Lambda lambda) {
 
 /************************************************************************/
 int main(int argc, char** argv) {
-  size_t m = 1048576;
+  const char* file = "testdata/geo.protodata";
   if (argc >= 2) {
-    m = (size_t)strtoull(argv[1], nullptr, 10);
+    file = argv[1];
+  }
+  printf("Benchmarking with file \"%s\".\n\n", file);
+
+  std::string uc = ReadFile(file);
+  std::string c;
+  std::string s;
+  if (uc.empty()) {
+    printf("Invalid file \"%s\".\n", file);
+    return 1;
   }
 
-  std::default_random_engine engine(std::random_device{}());
-  std::uniform_int_distribution<uint64_t> dist;
-  std::string plain;
-  std::string compressed;
-  plain.resize(m);
-  for (char& c : plain) {
-    c = (char)dist(engine);
-  }
-
-  printf("Compressing %zu bytes.\n", m);
-  printf("1.0.4=%.3lf ops/ms\n", Benchmark([&plain]() {
-           std::string s;
-           snappy_104::Compress(plain.data(), plain.size(), &s);
-         }));
-  printf("1.1.3=%.3lf ops/ms\n", Benchmark([&plain]() {
-           std::string s;
-           snappy_113::Compress(plain.data(), plain.size(), &s);
-         }));
-  printf("1.1.10=%.3lf ops/ms\n", Benchmark([&plain]() {
-           std::string s;
-           snappy_1110::Compress(plain.data(), plain.size(), &s);
-         }));
-  printf("1.2.1(STLStringResizeUninitialized)=%.3lf ops/ms\n", Benchmark([&plain]() {
-           std::string s;
-           snappy_121::Compress(plain.data(), plain.size(), &s);
-         }));
-  printf("1.2.2(STLStringResizeUninitialized)=%.3lf ops/ms\n", Benchmark([&plain]() {
-           std::string s;
-           snappy_122::Compress(plain.data(), plain.size(), &s);
-         }));
+  printf("Compressing %zu bytes.\n", uc.size());
+  printf("1.0.4=%.3lf ops/ms\n", Benchmark([&uc, &s]() { snappy_104::Compress(uc.data(), uc.size(), &s); }));
+  printf("1.1.3=%.3lf ops/ms\n", Benchmark([&uc, &s]() { snappy_113::Compress(uc.data(), uc.size(), &s); }));
+  printf("1.1.10=%.3lf ops/ms\n", Benchmark([&uc, &s]() { snappy_1110::Compress(uc.data(), uc.size(), &s); }));
+  printf("1.2.1(STLStringResizeUninitialized)=%.3lf ops/ms\n",
+         Benchmark([&uc, &s]() { snappy_121::Compress(uc.data(), uc.size(), &s); }));
+  printf("1.2.2(STLStringResizeUninitialized)=%.3lf ops/ms\n",
+         Benchmark([&uc, &s]() { snappy_122::Compress(uc.data(), uc.size(), &s); }));
   printf("\n");
 
-  snappy_121::Compress(plain.data(), plain.size(), &compressed);
-  printf("Uncompressing %zu bytes.\n", compressed.size());
-  printf("1.0.4=%.3lf ops/ms\n", Benchmark([&compressed]() {
-           std::string s;
-           snappy_104::Uncompress(compressed.data(), compressed.size(), &s);
-         }));
-  printf("1.1.3=%.3lf ops/ms\n", Benchmark([&compressed]() {
-           std::string s;
-           snappy_113::Uncompress(compressed.data(), compressed.size(), &s);
-         }));
-  printf("1.1.10=%.3lf ops/ms\n", Benchmark([&compressed]() {
-           std::string s;
-           snappy_1110::Uncompress(compressed.data(), compressed.size(), &s);
-         }));
-  printf("1.2.1(STLStringResizeUninitialized)=%.3lf ops/ms\n", Benchmark([&compressed]() {
-           std::string s;
-           snappy_121::Uncompress(compressed.data(), compressed.size(), &s);
-         }));
-  printf("1.2.2(STLStringResizeUninitialized)=%.3lf ops/ms\n", Benchmark([&compressed]() {
-           std::string s;
-           snappy_122::Uncompress(compressed.data(), compressed.size(), &s);
-         }));
+  snappy_122::Compress(uc.data(), uc.size(), &c);
+  printf("Uncompressing %zu bytes.\n", c.size());
+  printf("1.0.4=%.3lf ops/ms\n", Benchmark([&c, &s]() { snappy_104::Uncompress(c.data(), c.size(), &s); }));
+  printf("1.1.3=%.3lf ops/ms\n", Benchmark([&c, &s]() { snappy_113::Uncompress(c.data(), c.size(), &s); }));
+  printf("1.1.10=%.3lf ops/ms\n", Benchmark([&c, &s]() { snappy_1110::Uncompress(c.data(), c.size(), &s); }));
+  printf("1.2.1(STLStringResizeUninitialized)=%.3lf ops/ms\n",
+         Benchmark([&c, &s]() { snappy_121::Uncompress(c.data(), c.size(), &s); }));
+  printf("1.2.2(STLStringResizeUninitialized)=%.3lf ops/ms\n",
+         Benchmark([&c, &s]() { snappy_122::Uncompress(c.data(), c.size(), &s); }));
   printf("\n");
   return 0;
 }

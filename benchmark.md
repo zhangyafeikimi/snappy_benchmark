@@ -5,17 +5,19 @@
 ### GCC 8.5.0
 
 ```plain
-Compressing 1048576 bytes.
-1.0.4=8.160 ops/ms
-1.1.3=10.092 ops/ms
-1.1.10=17.000 ops/ms
-1.2.1(STLStringResizeUninitialized)=21.277 ops/ms
-1.2.2(STLStringResizeUninitialized)=21.526 ops/ms
+Benchmarking with file "testdata/geo.protodata".
 
-Uncompressing 1048627 bytes.
-1.0.4=23.438 ops/ms
-1.1.3=23.739 ops/ms
-1.1.10=23.369 ops/ms
-1.2.1(STLStringResizeUninitialized)=36.597 ops/ms
-1.2.2(STLStringResizeUninitialized)=36.275 ops/ms
+Compressing 118588 bytes.
+1.0.4=9.276 ops/ms
+1.1.3=10.018 ops/ms
+1.1.10=14.911 ops/ms
+1.2.1(STLStringResizeUninitialized)=13.410 ops/ms
+1.2.2(STLStringResizeUninitialized)=13.685 ops/ms
+
+Uncompressing 23140 bytes.
+1.0.4=24.925 ops/ms
+1.1.3=24.655 ops/ms
+1.1.10=45.862 ops/ms
+1.2.1(STLStringResizeUninitialized)=44.910 ops/ms
+1.2.2(STLStringResizeUninitialized)=47.761 ops/ms
 ```
