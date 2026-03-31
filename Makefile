@@ -1,7 +1,7 @@
 CXX          ?= g++
 AR           ?= ar
 CPPFLAGS     += -DNDEBUG=1
-CXXFLAGS     += -pthread -std=c++17 -g -O2 -Wall -Wextra -Werror -pedantic
+CXXFLAGS     += -pthread -std=c++17 -g -O3 -Wall -Wextra -Werror -pedantic
 LDFLAGS      += -pthread
 
 MACHINE      := $(shell $(CXX) $(CPPFLAGS) $(CXXFLAGS) -dumpmachine)
