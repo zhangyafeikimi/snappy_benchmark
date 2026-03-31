@@ -46,7 +46,7 @@
 /* Define to 1 if you have the <windows.h> header file. */
 #define HAVE_WINDOWS_H 0
 
-#if defined(__x86_64__)
+#if __AVX2__ == 1
 /* Define to 1 if you target processors with SSSE3+ and have <tmmintrin.h>. */
 #define SNAPPY_HAVE_SSSE3 1
 
