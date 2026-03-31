@@ -8,16 +8,16 @@
 Benchmarking with file "testdata/geo.protodata".
 
 Compressing 118588 bytes.
-1.0.4=9.276 ops/ms
-1.1.3=10.018 ops/ms
-1.1.10=14.911 ops/ms
-1.2.1(STLStringResizeUninitialized)=13.410 ops/ms
-1.2.2(STLStringResizeUninitialized)=13.685 ops/ms
+1.0.4=9.551 ops/ms
+1.1.3=9.950 ops/ms
+1.1.10=20.568 ops/ms
+1.2.1(STLStringResizeUninitialized)=16.815 ops/ms
+1.2.2(STLStringResizeUninitialized)=17.127 ops/ms
 
-Uncompressing 23140 bytes.
-1.0.4=24.925 ops/ms
-1.1.3=24.655 ops/ms
-1.1.10=45.862 ops/ms
-1.2.1(STLStringResizeUninitialized)=44.910 ops/ms
-1.2.2(STLStringResizeUninitialized)=47.761 ops/ms
+Uncompressing 23242 bytes.
+1.0.4=27.158 ops/ms
+1.1.3=26.037 ops/ms
+1.1.10=51.793 ops/ms
+1.2.1(STLStringResizeUninitialized)=18.000 ops/ms
+1.2.2(STLStringResizeUninitialized)=18.519 ops/ms
 ```
